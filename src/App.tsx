@@ -8,12 +8,17 @@ interface Team {
   strTeamBadge: string;
 }
 
+interface League {
+  idLeague: string;
+  strLeague: string; // Add the strLeague property
+}
+
 interface Season {
   strSeason: string;
 }
 
 const App: React.FC = () => {
-  const [leagues, setLeagues] = useState<string[]>([]);
+  const [leagues, setLeagues] = useState<League[]>([]);
   const [selectedLeague, setSelectedLeague] = useState<string | null>(null);
   const [seasons, setSeasons] = useState<Season[]>([]);
 
@@ -23,7 +28,7 @@ const App: React.FC = () => {
       .get("https://www.thesportsdb.com/api/v1/json/3/all_leagues.php")
       .then((response) => {
         const firstFiveLeagues = response.data.leagues.slice(0, 5);
-        setLeagues(firstFiveLeagues.map((league: any) => league.idLeague));
+        setLeagues(firstFiveLeagues);
       })
       .catch((error) => {
         console.error("Error fetching leagues:", error);
@@ -51,9 +56,12 @@ const App: React.FC = () => {
     <div className="app">
       <nav>
         <ul>
-          {leagues.map((leagueId) => (
-            <li key={leagueId} onClick={() => handleTabClick(leagueId)}>
-              {leagueId}
+          {leagues.map((league) => (
+            <li
+              key={league.idLeague}
+              onClick={() => handleTabClick(league.idLeague)}
+            >
+              {league.strLeague}
             </li>
           ))}
         </ul>
